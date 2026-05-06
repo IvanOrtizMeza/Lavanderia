@@ -1,0 +1,63 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <!-- ─── Sidebar ─────────────────────────────────────────────── -->
+  <mat-sidenav
+    [mode]="sidenavMode"
+    [opened]="opened"
+    (openedChange)="opened = $event"
+    class="sidenav">
+
+    <!-- Brand -->
+    <app-brand></app-brand>
+    <!-- Nav -->
+    <nav class="nav-section">
+      <p class="nav-label">MENÚ PRINCIPAL</p>
+      <mat-nav-list class="nav-list">
+        <a
+          mat-list-item
+          *ngFor="let item of menu"
+          [routerLink]="item.route"
+          routerLinkActive="nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="onNavClick()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      </mat-nav-list>
+    </nav>
+
+    <!-- User footer -->
+    <app-footer></app-footer>
+
+  </mat-sidenav>
+
+  <!-- ─── Contenido principal ───────────────────────────────── -->
+  <mat-sidenav-content>
+
+    <!-- Top toolbar -->
+    <mat-toolbar class="top-toolbar">
+      <button mat-icon-button class="menu-btn" (click)="toggleSidebar()" aria-label="Menú">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <div class="toolbar-left">
+        <span class="toolbar-title">{{ pageTitle }}</span>
+      </div>
+
+      <span class="spacer"></span>
+
+      <button mat-icon-button aria-label="Notificaciones" class="toolbar-action"
+        [matBadge]="'3'" matBadgeColor="warn" matBadgeSize="small">
+        <mat-icon>notifications_none</mat-icon>
+      </button>
+      <div class="toolbar-avatar">A</div>
+    </mat-toolbar>
+
+    <!-- Page content -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+  
+</mat-sidenav-container>
