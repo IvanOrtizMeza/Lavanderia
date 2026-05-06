@@ -1,0 +1,456 @@
+@use 'sass:color';
+
+// ─── Paleta metálica ────────────────────────────────────────────
+$bg-deep:     #0e1f3a;
+$bg-mid:      #162d50;
+$accent:      #00c8ff;
+$accent2:     #7b5fff;
+$metal-light: rgba(180, 220, 255, 0.14);
+$metal-border: rgba(140, 200, 255, 0.25);
+$text-main:   #4dd9ff;
+$text-soft:   rgba(160, 220, 255, 0.65);
+
+// ─── Wrapper ────────────────────────────────────────────────────
+.login-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 20% 50%, #1a3a6e 0%, $bg-deep 60%),
+              radial-gradient(ellipse at 80% 20%, #2a1560 0%, transparent 60%);
+  background-color: $bg-deep;
+}
+
+// ─── Orbes de luz ───────────────────────────────────────────────
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: orb-float 12s ease-in-out infinite alternate;
+}
+.orb-1 {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(0, 160, 255, 0.30) 0%, transparent 70%);
+  top: -140px; left: -120px;
+  animation-delay: 0s;
+}
+.orb-2 {
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(123, 95, 255, 0.28) 0%, transparent 70%);
+  bottom: -100px; right: -100px;
+  animation-delay: -4s;
+}
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.20) 0%, transparent 70%);
+  top: 40%; left: 55%;
+  animation-delay: -8s;
+}
+
+@keyframes orb-float {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(30px, -40px) scale(1.1); }
+}
+
+// ─── Partículas ─────────────────────────────────────────────────
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.55), transparent);
+  animation: particle-rise linear infinite;
+  opacity: 0;
+}
+
+@keyframes particle-rise {
+  0%   { transform: translateY(0) scale(0.8);   opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.15; }
+  100% { transform: translateY(-105vh) scale(1.5); opacity: 0; }
+}
+
+// ─── Glass Card ─────────────────────────────────────────────────
+.glass-card {
+  position: relative;
+  z-index: 10;
+  width: 420px;
+  padding: 2.8rem 2.6rem 2.4rem;
+  border-radius: 28px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.07) 0%,
+    rgba(255,255,255,0.03) 100%
+  );
+  backdrop-filter: blur(32px) saturate(1.4);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  border: 1px solid $metal-border;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 2px 60px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(0, 150, 255, 0.08);
+  animation: card-enter 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  // Brillo superior metálico
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    background: linear-gradient(
+      135deg,
+      rgba(255,255,255,0.08) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+  }
+
+  @media (max-width: 480px) {
+    width: 92vw;
+    padding: 2rem 1.5rem;
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(36px) scale(0.97);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+// Shake al validar
+.shake {
+  animation: shake 0.55s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shake {
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(5px); }
+  30%, 50%, 70% { transform: translateX(-5px); }
+  40%, 60% { transform: translateX(5px); }
+}
+
+// ─── Header ─────────────────────────────────────────────────────
+.card-header {
+  text-align: center;
+  margin-bottom: 1.6rem;
+  animation: fade-up 0.6s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.logo-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0,180,255,0.18), rgba(123,95,255,0.18));
+  border: 1.5px solid rgba(0, 200, 255, 0.35);
+  box-shadow: 0 0 28px rgba(0, 180, 255, 0.20), 0 0 8px rgba(0,180,255,0.10) inset;
+  margin: 0 auto 1rem;
+  animation: logo-spin 18s linear infinite;
+
+  .logo-icon {
+    font-size: 2rem;
+    color: $accent;
+    filter: drop-shadow(0 0 8px rgba(0,200,255,0.6));
+  }
+}
+
+@keyframes logo-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.brand {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 0 0 0.3rem;
+  background: linear-gradient(90deg, #ffffff, $accent, $accent2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 0.78rem;
+  color: $text-soft;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+// ─── Divisor metálico ───────────────────────────────────────────
+.metal-divider {
+  height: 1px;
+  margin: 0 0 1.8rem;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 200, 255, 0.45) 40%,
+    rgba(123, 95, 255, 0.45) 60%,
+    transparent 100%
+  );
+  animation: fade-up 0.6s 0.2s both;
+}
+
+// ─── Formulario ─────────────────────────────────────────────────
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  animation: fade-up 0.6s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.field-full {
+  width: 100%;
+
+  // Label
+  .mat-mdc-form-field-infix {
+    color: $text-main;
+  }
+
+  // Outline color override para tema oscuro
+  --mdc-outlined-text-field-outline-color: rgba(0, 180, 255, 0.30);
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 200, 255, 0.65);
+  --mdc-outlined-text-field-focus-outline-color: #{$accent};
+  --mdc-outlined-text-field-label-text-color: rgba(77, 217, 255, 0.75);
+  --mdc-outlined-text-field-input-text-color: #{$text-main};
+  --mdc-outlined-text-field-caret-color: #{$accent};
+  --mat-form-field-focus-select-arrow-color: #{$accent};
+  --mdc-outlined-text-field-focus-label-text-color: #{$accent};
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px $bg-mid inset;
+    -webkit-text-fill-color: $text-main;
+  }
+
+  // Placeholder
+  input::placeholder { color: rgba(77, 217, 255, 0.35); }
+
+  mat-icon[matPrefix] {
+    color: $text-soft;
+    margin-right: 6px;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+  }
+
+  &.mat-focused mat-icon[matPrefix] {
+    color: $accent;
+  }
+}
+
+// ─── Barra de fortaleza ─────────────────────────────────────────
+.strength-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -4px 0 6px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease, background 0.4s ease;
+
+  &.weak        { background: #ff4d4d; }
+  &.medium      { background: #f5a623; }
+  &.strong      { background: #50fa7b; }
+  &.very-strong { background: linear-gradient(90deg, #50fa7b, $accent); }
+}
+
+.strength-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  &.weak        { color: #ff4d4d; }
+  &.medium      { color: #f5a623; }
+  &.strong      { color: #50fa7b; }
+  &.very-strong { color: $accent; }
+}
+
+// ─── Botón submit ───────────────────────────────────────────────
+.submit-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 56px;
+  margin-top: 0.6rem;
+  border-radius: 14px !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.2s;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 150, 255, 0.85) 0%,
+    rgba(100, 60, 255, 0.85) 100%
+  ) !important;
+  color: #fff !important;
+  border: 1px solid rgba(0, 200, 255, 0.4) !important;
+  box-shadow:
+    0 4px 24px rgba(0, 140, 255, 0.35),
+    0 0 0 1px rgba(255,255,255,0.06) inset;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 32px rgba(0, 140, 255, 0.5),
+      0 0 0 1px rgba(255,255,255,0.08) inset;
+    filter: brightness(1.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0px) scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-spinner {
+    --mdc-circular-progress-active-indicator-color: #fff;
+  }
+
+  .btn-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1;
+  }
+}
+
+// ─── Forgot ─────────────────────────────────────────────────────
+.forgot {
+  text-align: center;
+  margin: 0.8rem 0 0;
+  font-size: 0.78rem;
+  color: $text-soft;
+
+  a {
+    color: $accent;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+    &:hover { color: color.adjust(#00c8ff, $lightness: 15%); text-decoration: underline; }
+  }
+}
+
+// ─── Animación genérica entrada ─────────────────────────────────
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+@keyframes spin {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+/* ✨ inputs modernos */
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+
+  input {
+    width: 100%;
+    padding: 12px 40px;
+    border-radius: 12px;
+    border: none;
+
+    background: rgba(255,255,255,0.1);
+    color: white;
+    outline: none;
+
+    transition: all 0.3s;
+  }
+
+  input:focus {
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 10px rgba(0,255,255,0.5);
+  }
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.7);
+
+  transition: 0.3s;
+}
+
+.input-group:focus-within .input-icon {
+  color: cyan;
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* 👁 toggle */
+.toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: white;
+}
+
+/* 🚀 botón premium */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  font-weight: bold;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 114, 255, 0.5);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
