@@ -37,10 +37,12 @@ const MOBILE_WIDTH = 768;
 })
 export class Layout implements OnInit {
   menu = [
-    { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+    { icon: 'home', label: 'Home', route: '/dashboard/home' },
     { icon: 'people', label: 'Usuarios', route: '/dashboard/users' },
     { icon: 'settings', label: 'Configuración', route: '/dashboard/settings' },
-    { icon: 'shopping_cart', label: 'Pedidos', route: '/dashboard/pedidos' }
+    { icon: 'shopping_cart', label: 'Pedidos', route: '/dashboard/pedidos' },
+    { icon: 'dashboard', label: 'Dashboard', route: '/dashboard/dashboard' }, 
+    
   ];
 
   isMobile = false;
