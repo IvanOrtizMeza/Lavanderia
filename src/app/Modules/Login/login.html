@@ -1,14 +1,15 @@
 <div class="login-wrapper">
-
   <!-- Partículas flotantes -->
   <div class="particles" aria-hidden="true">
     @for (p of particles; track $index) {
-      <span class="particle"
+      <span
+        class="particle"
         [style.left.%]="p.left"
         [style.width.px]="p.size"
         [style.height.px]="p.size"
         [style.animation-delay.s]="p.delay"
-        [style.animation-duration.s]="p.duration">
+        [style.animation-duration.s]="p.duration"
+      >
       </span>
     }
   </div>
@@ -20,7 +21,6 @@
 
   <!-- Card -->
   <div class="glass-card" [class.shake]="shaking()">
-
     <!-- Logo -->
     <header class="card-header">
       <div class="logo-ring">
@@ -33,34 +33,42 @@
     <div class="metal-divider" aria-hidden="true"></div>
 
     <!-- Formulario con Angular Material -->
-    <form [formGroup]="form" (ngSubmit)="login()" class="form" autocomplete="off" novalidate>
-
+    <form [formRoot]="loginForm" class="form" autocomplete="off">
       <!-- Email -->
       <mat-form-field appearance="outline" class="field-full">
         <mat-label>Correo electrónico</mat-label>
         <mat-icon matPrefix>alternate_email</mat-icon>
-        <input matInput type="email" formControlName="email" autocomplete="email" />
-        @if (form.controls.email.hasError('required') && form.controls.email.touched) {
-          <mat-error>El correo es requerido</mat-error>
-        } @else if (form.controls.email.hasError('email') && form.controls.email.touched) {
-          <mat-error>Ingresa un correo válido</mat-error>
+        <input matInput type="email" [formField]="loginForm.email" autocomplete="email" />
+        @if (loginForm.email().touched() && loginForm.email().invalid()) {
+          @for (error of loginForm.email().errors(); track error.kind) {
+            <mat-error>{{ error.message || error.kind }}</mat-error>
+          }
         }
       </mat-form-field>
-
+        
       <!-- Password -->
       <mat-form-field appearance="outline" class="field-full">
         <mat-label>Contraseña</mat-label>
         <mat-icon matPrefix>lock_outline</mat-icon>
-        <input matInput [type]="hide() ? 'password' : 'text'"
-          formControlName="password" autocomplete="current-password" />
-        <button mat-icon-button matSuffix type="button"
-          (click)="hide.set(!hide())" [attr.aria-label]="'Mostrar contraseña'">
+        <input
+          matInput
+          [type]="hide() ? 'password' : 'text'"
+          [formField]="loginForm.password"
+          autocomplete="current-password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hide.set(!hide())"
+          [attr.aria-label]="'Mostrar contraseña'"
+        >
           <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        @if (form.controls.password.hasError('required') && form.controls.password.touched) {
-          <mat-error>La contraseña es requerida</mat-error>
-        } @else if (form.controls.password.hasError('minlength') && form.controls.password.touched) {
-          <mat-error>Mínimo 6 caracteres</mat-error>
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+          @for (error of loginForm.password().errors(); track error.kind) {
+            <mat-error>{{ error.message || error.kind }}</mat-error>
+          }
         }
       </mat-form-field>
 
@@ -68,19 +76,23 @@
       @if (passwordValue().length > 0) {
         <div class="strength-wrap">
           <div class="strength-bar">
-            <div class="strength-fill" [class]="strengthClass()" [style.width]="strengthWidth()"></div>
+            <div
+              class="strength-fill"
+              [class]="strengthClass()"
+              [style.width]="strengthWidth()"
+            ></div>
           </div>
           <span class="strength-label" [class]="strengthClass()">{{ strengthLabel() }}</span>
         </div>
       }
 
       <!-- Botón submit -->
-      <button mat-flat-button type="submit" class="submit-btn" [disabled]="loading()">
-        @if (loading()) {
+      <button mat-flat-button type="submit" class="submit-btn" [disabled]="loginForm().submitting()">
+        @if (loginForm().submitting()) {
           <div class="btn-loading">
             <mat-progress-spinner diameter="20" mode="indeterminate" class="btn-spinner">
             </mat-progress-spinner>
-            <span>Verificando...</span>
+            <span>Enviando...</span>
           </div>
         } @else {
           <ng-container>
@@ -91,8 +103,6 @@
       </button>
 
       <p class="forgot">¿Olvidaste tu <a href="#">contraseña</a>?</p>
-
     </form>
   </div>
-
 </div>

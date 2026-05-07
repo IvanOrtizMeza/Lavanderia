@@ -29,8 +29,6 @@ const MOBILE_WIDTH = 768;
     NgFor,
     Brand,
     Footer
-
-
   ],
   templateUrl: './layout.html',
   styleUrls: ['./layout.scss'],
