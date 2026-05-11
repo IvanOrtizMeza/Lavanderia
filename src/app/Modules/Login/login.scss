@@ -151,28 +151,59 @@ $text-soft:   rgba(160, 220, 255, 0.65);
   animation: fade-up 0.6s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.logo-ring {
+.logo-mark {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(0,180,255,0.18), rgba(123,95,255,0.18));
-  border: 1.5px solid rgba(0, 200, 255, 0.35);
-  box-shadow: 0 0 28px rgba(0, 180, 255, 0.20), 0 0 8px rgba(0,180,255,0.10) inset;
-  margin: 0 auto 1rem;
-  animation: logo-spin 18s linear infinite;
+  width: 90px; height: 90px;
+  margin: 0 auto 1.2rem;
 
   .logo-icon {
-    font-size: 2rem;
+    position: relative;
+    z-index: 2;
+    font-size: 3rem;
     color: $accent;
-    filter: drop-shadow(0 0 8px rgba(0,200,255,0.6));
+    filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.7));
+    animation: icon-breathe 3s ease-in-out infinite;
+  }
+
+  .logo-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 200, 255, 0.12);
+    animation: pulse-ring 2.5s ease-out infinite;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: rgba(0, 200, 255, 0.10);
+      animation: pulse-ring 2.5s ease-out 0.5s infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: rgba(0, 200, 255, 0.15);
+      animation: pulse-ring 2.5s ease-out 1s infinite;
+    }
   }
 }
 
-@keyframes logo-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.8; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+
+@keyframes icon-breathe {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 8px rgba(0,200,255,0.55)); }
+  50%       { transform: scale(1.08); filter: drop-shadow(0 0 16px rgba(0,200,255,0.90)); }
 }
 
 .brand {
@@ -181,6 +212,8 @@ $text-soft:   rgba(160, 220, 255, 0.65);
   letter-spacing: 3px;
   text-transform: uppercase;
   margin: 0 0 0.3rem;
+  padding: 0 2px;           // evita recorte de letras con background-clip
+  line-height: 1.2;
   background: linear-gradient(90deg, #ffffff, $accent, $accent2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -220,38 +253,87 @@ $text-soft:   rgba(160, 220, 255, 0.65);
 .field-full {
   width: 100%;
 
-  // Label
-  .mat-mdc-form-field-infix {
-    color: $text-main;
-  }
+  // Overrides de Angular Material con ::ng-deep para penetrar la encapsulación
+  ::ng-deep {
+    // Fondo propio del input
+    .mdc-text-field--outlined {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border-radius: 12px !important;
 
-  // Outline color override para tema oscuro
-  --mdc-outlined-text-field-outline-color: rgba(0, 180, 255, 0.30);
-  --mdc-outlined-text-field-hover-outline-color: rgba(0, 200, 255, 0.65);
-  --mdc-outlined-text-field-focus-outline-color: #{$accent};
-  --mdc-outlined-text-field-label-text-color: rgba(77, 217, 255, 0.75);
-  --mdc-outlined-text-field-input-text-color: #{$text-main};
-  --mdc-outlined-text-field-caret-color: #{$accent};
-  --mat-form-field-focus-select-arrow-color: #{$accent};
-  --mdc-outlined-text-field-focus-label-text-color: #{$accent};
+      &:hover:not(.mdc-text-field--focused) {
+        background: rgba(255, 255, 255, 0.15) !important;
+      }
 
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 100px $bg-mid inset;
-    -webkit-text-fill-color: $text-main;
-  }
+      &.mdc-text-field--focused {
+        background: rgba(255, 255, 255, 0.18) !important;
+      }
+    }
 
-  // Placeholder
-  input::placeholder { color: rgba(77, 217, 255, 0.35); }
+    // Sin borde outline
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: transparent !important;
+    }
 
-  mat-icon[matPrefix] {
-    color: $text-soft;
-    margin-right: 6px;
-    font-size: 1.1rem;
-    transition: color 0.3s;
-  }
+    .mdc-text-field--outlined:hover {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: transparent !important;
+      }
+    }
 
-  &.mat-focused mat-icon[matPrefix] {
-    color: $accent;
+    .mdc-text-field--focused {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: $accent !important;
+        border-width: 2px !important;
+      }
+    }
+
+    // Texto del input: blanco puro
+    .mdc-text-field__input {
+      color: #ffffff !important;
+      caret-color: $accent !important;
+    }
+
+    // Label flotante
+    .mdc-floating-label {
+      color: rgba(255, 255, 255, 0.80) !important;
+    }
+
+    .mdc-text-field--focused .mdc-floating-label {
+      color: rgba(255, 255, 255, 0.80) !important;
+    }
+
+    // Separador vertical entre ícono y campo — eliminado
+    .mat-mdc-form-field-icon-prefix {
+      border-right: none !important;
+      &::after { display: none !important; }
+    }
+
+    // Íconos — color fijo sin cambio al foco
+    .mat-mdc-form-field-icon-prefix mat-icon {
+      color: rgba(255, 255, 255, 0.70) !important;
+    }
+    .mdc-text-field--focused .mat-mdc-form-field-icon-prefix mat-icon {
+      color: rgba(255, 255, 255, 0.70) !important;
+    }
+
+    .mat-mdc-form-field-icon-suffix button mat-icon {
+      color: rgba(255, 255, 255, 0.60) !important;
+    }
+
+    // Autofill
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 100px #162d50 inset !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    // Placeholder
+    input::placeholder { color: rgba(255, 255, 255, 0.40); }
   }
 }
 
