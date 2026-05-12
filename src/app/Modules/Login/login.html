@@ -38,7 +38,7 @@
       <mat-form-field appearance="outline" class="field-full">
         <mat-label>Correo electrónico</mat-label>
         <mat-icon matPrefix>alternate_email</mat-icon>
-        <input matInput type="email" [formField]="loginForm.email" autocomplete="email" />
+        <input matInput type="email" [formField]="loginForm.email"  />
         @if (loginForm.email().touched() && loginForm.email().invalid()) {
           @for (error of loginForm.email().errors(); track error.kind) {
             <mat-error>{{ error.message || error.kind }}</mat-error>
