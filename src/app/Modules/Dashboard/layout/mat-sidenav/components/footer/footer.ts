@@ -19,7 +19,9 @@ export class Footer {
 
   /** Primera letra del nombre para el avatar */
   readonly initial = computed(() => {
+    // 1. Intenta leer el nombre del usuario, si no existe, usa cadena vacía esto lo tomo desde el localStorage 
     const name = this.user()?.name ?? '';
+    // 2. Devuelve la primera letra en mayúscula, o '?' si el nombre está vacío
     return name.charAt(0).toUpperCase() || '?';
   });
 
