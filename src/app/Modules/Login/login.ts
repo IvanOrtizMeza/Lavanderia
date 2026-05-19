@@ -51,26 +51,22 @@ export class Login {
     },
     {
       submission: {
-        action: () => {
+        action: async () => {
           this.serverError.set(null);
-          return firstValueFrom(
+          await firstValueFrom(
             this.auth.login(this.model()).pipe(
               catchError((err: HttpErrorResponse) => {
-                const msg =
-                  err.error?.message ?? 'Credenciales incorrectas. Intenta de nuevo.';
+                const msg = err.error?.message ?? 'Credenciales incorrectas. Intenta de nuevo.';
                 this.serverError.set(msg);
                 return EMPTY;
-              }),
-            ),
-          ).then(() => {
-            if (!this.serverError()) {
-              this.router.navigate(['/dashboard']);
-            }
-          });
+              })));
+          if (!this.serverError()) {
+            this.router.navigate(['/dashboard']);
+          }
         },
         onInvalid: () => {
-          this.shaking.set(true);
-          setTimeout(() => this.shaking.set(false), 600);
+          //this.shaking.set(true);
+          //setTimeout(() => this.shaking.set(false), 600);
         },
       },
     },
