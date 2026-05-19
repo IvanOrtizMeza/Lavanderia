@@ -29,11 +29,6 @@ export class AuthService {
       );
   }
 
-  /**
-   * Invalida el token en el servidor (Sanctum) y limpia la sesión local.
-   * Si el endpoint falla (red caída, token expirado), la sesión local
-   * se limpia igualmente gracias a `finalize`.
-   */
   logout(): Observable<void> {
     return this.http
       .post<void>(`${environment.apiUrl}/auth/logout`, {})
