@@ -1,10 +1,24 @@
 <div class="sidebar-footer">
-    <div class="user-info">
-        <div class="avatar">A</div>
+    <div class="user-info" [class.logging-out]="loggingOut()">
+        <div class="avatar" [attr.aria-label]="displayName()">{{ initial() }}</div>
         <div class="user-details">
-            <span class="user-name">Administrador</span>
-            <span class="user-role">Admin · v1.0.0</span>
+            <span class="user-name">{{ displayName() }}</span>
+            <span class="user-role">{{ displaySub() }}</span>
         </div>
+        <button
+      class="logout-btn"
+      type="button"
+      [disabled]="loggingOut()"
+      [matTooltip]="loggingOut() ? 'Cerrando sesión…' : 'Cerrar sesión'"
+      matTooltipPosition="above"
+      (click)="onLogout()"
+      aria-label="Cerrar sesión"
+    >
+      @if (loggingOut()) {
+        <mat-spinner diameter="16" />
+      } @else {
         <mat-icon class="logout-icon">logout</mat-icon>
+      }
+    </button>
     </div>
 </div>

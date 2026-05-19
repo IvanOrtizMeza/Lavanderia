@@ -33,7 +33,7 @@
     <div class="metal-divider" aria-hidden="true"></div>
 
     <!-- Formulario con Angular Material -->
-    <form [formRoot]="loginForm" class="form" autocomplete="off">
+    <form [formRoot]="loginForm" class="form" >
       <!-- Email -->
       <mat-form-field appearance="outline" class="field-full">
         <mat-label>Correo electrónico</mat-label>
@@ -54,7 +54,7 @@
           matInput
           [type]="hide() ? 'password' : 'text'"
           [formField]="loginForm.password"
-          autocomplete="current-password"
+         
         />
         <button
           mat-icon-button
@@ -72,17 +72,11 @@
         }
       </mat-form-field>
 
-      <!-- Barra de fortaleza -->
-      @if (passwordValue().length > 0) {
-        <div class="strength-wrap">
-          <div class="strength-bar">
-            <div
-              class="strength-fill"
-              [class]="strengthClass()"
-              [style.width]="strengthWidth()"
-            ></div>
-          </div>
-          <span class="strength-label" [class]="strengthClass()">{{ strengthLabel() }}</span>
+      <!-- Error del servidor -->
+      @if (serverError()) {
+        <div class="server-error" role="alert">
+          <mat-icon class="server-error__icon">error_outline</mat-icon>
+          <span>{{ serverError() }}</span>
         </div>
       }
 

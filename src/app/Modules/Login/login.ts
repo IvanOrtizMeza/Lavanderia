@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { email, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EMPTY, catchError, firstValueFrom } from 'rxjs';
 import { LoginRequest } from './Interfaces/login.interface';
 import { AuthService } from './Services/auth.service';
-
+import { TokenStorageService } from '../../../app/Auth/token-storage.service';
 // ── Particle config (static, computed once) ────────────────────────────────────
 const PARTICLES = Array.from({ length: 35 }, () => ({
   size: Math.random() * 10 + 4,
@@ -15,10 +18,6 @@ const PARTICLES = Array.from({ length: 35 }, () => ({
   delay: Math.random() * 14,
   duration: Math.random() * 12 + 8,
 }));
-
-const STRENGTH_WIDTHS = ['0%', '20%', '40%', '65%', '82%', '100%'] as const;
-const STRENGTH_CLASSES = ['', 'weak', 'weak', 'medium', 'strong', 'very-strong'] as const;
-const STRENGTH_LABELS = ['', 'Muy débil', 'Débil', 'Regular', 'Fuerte', 'Muy fuerte'] as const;
 
 // ──────────────────────────────────────────────────────────────────────────────
 @Component({
@@ -29,11 +28,14 @@ const STRENGTH_LABELS = ['', 'Muy débil', 'Débil', 'Regular', 'Fuerte', 'Muy f
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
-  private auth = inject(AuthService);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly isAuthenticated = inject(TokenStorageService);
 
   // ── UI state ────────────────────────────────────────────────────────────────
   readonly hide = signal(true);
   readonly shaking = signal(false);
+  readonly serverError = signal<string | null>(null);
   readonly particles = PARTICLES;
 
   // ── Form ────────────────────────────────────────────────────────────────────
@@ -45,13 +47,27 @@ export class Login {
       required(login.email, { message: 'El correo es requerido' });
       email(login.email, { message: 'Ingresa un correo válido' });
       required(login.password, { message: 'La contraseña es requerida' });
-      minLength(login.password, 6, { message: 'Mínimo 6 caracteres' });
+      minLength(login.password, 8, { message: 'Mínimo 8 caracteres' });
     },
     {
       submission: {
-        //cuando el formulario es valido 
-        action: () => this.auth.login(this.model()),
-        //cuando no paso las validaciones
+        action: () => {
+          this.serverError.set(null);
+          return firstValueFrom(
+            this.auth.login(this.model()).pipe(
+              catchError((err: HttpErrorResponse) => {
+                const msg =
+                  err.error?.message ?? 'Credenciales incorrectas. Intenta de nuevo.';
+                this.serverError.set(msg);
+                return EMPTY;
+              }),
+            ),
+          ).then(() => {
+            if (!this.serverError()) {
+              this.router.navigate(['/dashboard']);
+            }
+          });
+        },
         onInvalid: () => {
           this.shaking.set(true);
           setTimeout(() => this.shaking.set(false), 600);
@@ -60,15 +76,4 @@ export class Login {
     },
   );
 
-  // ── Password strength ───────────────────────────────────────────────────────
-  readonly passwordValue = computed(() => this.loginForm.password().value() ?? '');
-
-  readonly strengthScore = computed(() => {
-    const p = this.passwordValue();
-    return [p.length >= 6, p.length >= 10, /[A-Z]/.test(p), /[0-9]/.test(p), /[^A-Za-z0-9]/.test(p)].filter(Boolean).length;
-  });
-
-  readonly strengthWidth = computed(() => STRENGTH_WIDTHS[this.strengthScore()]);
-  readonly strengthClass = computed(() => STRENGTH_CLASSES[this.strengthScore()]);
-  readonly strengthLabel = computed(() => (this.passwordValue().length > 0 ? STRENGTH_LABELS[this.strengthScore()] : ''));
 }

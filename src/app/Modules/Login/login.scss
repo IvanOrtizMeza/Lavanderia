@@ -435,6 +435,28 @@ $text-soft:   rgba(160, 220, 255, 0.65);
   }
 }
 
+// ─── Server error alert ─────────────────────────────────────────
+.server-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 72, 72, 0.12);
+  border: 1px solid rgba(255, 100, 100, 0.35);
+  color: #ff7575;
+  font-size: 0.85rem;
+  animation: fade-up 0.25s ease;
+
+  &__icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+}
+
 // ─── Forgot ─────────────────────────────────────────────────────
 .forgot {
   text-align: center;
