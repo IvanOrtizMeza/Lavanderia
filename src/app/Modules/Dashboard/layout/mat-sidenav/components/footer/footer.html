@@ -1,11 +1,11 @@
 <div class="sidebar-footer">
-    <div class="user-info" [class.logging-out]="loggingOut()">
-        <div class="avatar" [attr.aria-label]="displayName()">{{ initial() }}</div>
-        <div class="user-details">
-            <span class="user-name">{{ displayName() }}</span>
-            <span class="user-role">{{ displaySub() }}</span>
-        </div>
-        <button
+  <div class="user-info" [class.logging-out]="loggingOut()">
+    <div class="avatar" [attr.aria-label]="displayName()">{{ initial() }}</div>
+    <div class="user-details">
+      <span class="user-name">{{ displayName() }}</span>
+      <span class="user-role">{{ displaySub() }}</span>
+    </div>
+    <button
       class="logout-btn"
       type="button"
       [disabled]="loggingOut()"
@@ -20,5 +20,5 @@
         <mat-icon class="logout-icon">logout</mat-icon>
       }
     </button>
-    </div>
+  </div>
 </div>
